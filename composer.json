@@ -5,28 +5,26 @@
     "keywords": ["laravel", "framework"],
     "license": "MIT",
     "require": {
-        "php": "^8.1",
-        "guzzlehttp/guzzle": "^7.2",
+        "php": "^8.2",
+        "laravel/framework": "^11.9",
+        "laravel/tinker": "^2.9",
+        "laravel/sanctum": "^4.0",
         "laravel/fortify": "^1.18",
-        "laravel/framework": "^10.10",
-        "laravel/sanctum": "^3.3",
-        "laravel/tinker": "^2.8",
-        "lee-to/moonshine-tree-resource": "^1.0",
+        "moonshine/moonshine": "3.*.*-dev",
+        "moonshine/permissions": "^2.0",
+        "lee-to/moonshine-tree-resource": "^2.0",
         "lee-to/pixel-craft": "^1.0",
         "livewire/livewire": "^3.2",
-        "livewire/volt": "^1.5",
-        "moonshine/moonshine": "^2.0",
-        "moonshine/permissions": "^1.0"
+        "livewire/volt": "^1.5"
     },
     "require-dev": {
-        "barryvdh/laravel-debugbar": "^3.9",
-        "fakerphp/faker": "^1.9.1",
-        "laravel/pint": "^1.0",
+        "fakerphp/faker": "^1.23",
+        "laravel/pail": "^1.1",
+        "laravel/pint": "^1.13",
         "laravel/sail": "^1.26",
-        "mockery/mockery": "^1.4.4",
-        "nunomaduro/collision": "^7.0",
-        "phpunit/phpunit": "^10.1",
-        "spatie/laravel-ignition": "^2.0"
+        "mockery/mockery": "^1.6",
+        "nunomaduro/collision": "^8.1",
+        "phpunit/phpunit": "^11.0.1"
     },
     "autoload": {
         "psr-4": {
@@ -52,7 +50,13 @@
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
         ],
         "post-create-project-cmd": [
-            "@php artisan key:generate --ansi"
+            "@php artisan key:generate --ansi",
+            "@php -r \"file_exists('database/database.sqlite') || touch('database/database.sqlite');\"",
+            "@php artisan migrate --graceful --ansi"
+        ],
+        "dev": [
+            "Composer\\Config::disableProcessTimeout",
+            "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1\" \"php artisan pail --timeout=0\" \"npm run dev\" --names=server,queue,logs,vite"
         ]
     },
     "extra": {
@@ -69,6 +73,18 @@
             "php-http/discovery": true
         }
     },
-    "minimum-stability": "stable",
+    "repositories": [
+        {
+            "type": "github",
+            "url": "https://github.com/moonshine-software/moonshine",
+            "options": {
+                "versions": {
+                    "moonshine/moonshine": "3.*.*-dev"
+                },
+                "symlink": true
+            }
+        }
+    ],
+    "minimum-stability": "dev",
     "prefer-stable": true
 }
