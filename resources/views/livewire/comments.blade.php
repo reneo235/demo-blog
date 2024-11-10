@@ -1,5 +1,5 @@
 <div>
-    <x-moonshine::divider label="Комментарии" />
+    <x-moonshine::layout.divider label="Комментарии" />
 
     <x-moonshine::form name="comments" wire:submit="store">
         <x-moonshine::form.textarea name="message" wire:model="form.message" />
@@ -19,7 +19,7 @@
         @include('livewire.shared.comment', ['comment' => $comment])
 
         @if($comment->comments->isNotEmpty())
-            <x-moonshine::divider />
+            <x-moonshine::layout.divider />
 
             @foreach($comment->comments as $child)
                 @include('livewire.shared.comment', ['comment' => $child])

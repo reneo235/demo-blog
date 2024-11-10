@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\MoonShine\Controllers;
 
-use MoonShine\MoonShineRequest;
-use MoonShine\Http\Controllers\MoonshineController;
+use MoonShine\Laravel\Http\Controllers\MoonShineController;
+use MoonShine\Laravel\MoonShineRequest;
 use Symfony\Component\HttpFoundation\Response;
 
 final class UserController extends MoonshineController

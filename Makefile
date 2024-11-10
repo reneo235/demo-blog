@@ -1,19 +1,35 @@
+-include .env
+
 THIS_FILE := $(lastword $(MAKEFILE_LIST))
-.PHONY: build rebuild rebuild-app up migrate migrate-rollback migrate-fresh migration route-list test composer-install composer-update composer-du npm-install npm-update npm-build npm-host demo-install update git-upstream publish
-app := php-moonshine-blog
-path := /var/www/moonshine-blog
-app-npm := npm-moonshine-blog
+
+app := $(COMPOSE_PROJECT_NAME)-php
+nginx := $(COMPOSE_PROJECT_NAME)-nginx
+mysql := $(COMPOSE_PROJECT_NAME)-mysql
+app-npm := npm
+path := /var/www/app
+
 #docker
 build:
 	docker-compose -f docker-compose.yml up --build -d $(c)
+	@echo "$(APP_URL)/admin"
 rebuild:
 	docker-compose up -d --force-recreate --no-deps --build $(r)
+	@echo "$(APP_URL)/admin"
 rebuild-app:
 	docker-compose up -d --force-recreate --no-deps --build $(app)
 up:
 	docker-compose -f docker-compose.yml up -d $(c)
+	@echo "$(APP_URL)/admin"
+stop:
+	docker-compose -f docker-compose.yml stop $(c)
 it:
+	docker exec -it $(to) /bin/bash
+it-app:
 	docker exec -it $(app) /bin/bash
+it-nginx:
+	docker exec -it $(nginx) /bin/bash
+it-mysql:
+	docker exec -it $(mysql) /bin/bash
 
 #laravel
 migrate:
@@ -24,10 +40,6 @@ migrate-fresh:
 	docker exec $(app) php $(path)/artisan migrate:fresh --seed
 migration:
 	docker exec $(app) php $(path)/artisan make:migration $(m)
-route-list:
-	docker exec $(app) php $(path)/artisan route:list
-test:
-	docker exec $(app) php $(path)/artisan test
 
 #composer
 composer-install:
@@ -47,22 +59,10 @@ npm-build:
 npm-host:
 	docker-compose run --rm --service-ports $(app-npm) run dev --host $(c)
 
-#moonshine
-demo-install:
-	cp .env.example .env
-	make build
-	make npm-install
-	make npm-build
-	make composer-install
-	docker exec $(app) php $(path)/artisan key:generate
-	docker exec $(app) php $(path)/artisan storage:link
-	make migrate-fresh
-
 #for contributors
 update: git-upstream publish
 
 git-upstream:
-	git fetch upstream && git merge upstream/master
+	git fetch upstream && git merge upstream/3.x
 publish:
 	docker exec $(app) php $(path)/artisan vendor:publish --tag=laravel-assets --force $(c)
-

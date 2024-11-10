@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
-    <x-moonshine::grid>
+    <x-moonshine::layout.grid>
         @foreach($articles as $article)
-            <x-moonshine::column colSpan="4">
+            <x-moonshine::layout.column colSpan="4">
                 <x-moonshine::card
                     :url="route('articles.index', $article->slug)"
                     :overlay="true"
@@ -20,7 +20,7 @@
                         </x-moonshine::link-button>
                     </x-slot:actions>
                 </x-moonshine::card>
-            </x-moonshine::column>
+            </x-moonshine::layout.column>
         @endforeach
-    </x-moonshine::grid>
+    </x-moonshine::layout.grid>
 @endsection

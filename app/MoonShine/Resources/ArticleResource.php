@@ -5,27 +5,26 @@ declare(strict_types=1);
 namespace App\MoonShine\Resources;
 
 use Illuminate\Contracts\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use App\Models\Article;
-
-use MoonShine\ActionButtons\ActionButton;
-use MoonShine\Decorations\Column;
-use MoonShine\Decorations\Grid;
-use MoonShine\Enums\ClickAction;
-use MoonShine\Fields\DateRange;
-use MoonShine\Fields\Image;
-use MoonShine\Fields\Relationships\BelongsTo;
-use MoonShine\Fields\Relationships\BelongsToMany;
-use MoonShine\Fields\Slug;
-use MoonShine\Fields\StackFields;
-use MoonShine\Fields\Switcher;
-use MoonShine\Fields\Text;
-use MoonShine\Fields\TinyMce;
-use MoonShine\Models\MoonshineUserRole;
-use MoonShine\Resources\ModelResource;
-use MoonShine\Decorations\Block;
-use MoonShine\Fields\ID;
-use MoonShine\Resources\MoonShineUserResource;
+use MoonShine\Contracts\UI\ActionButtonContract;
+use MoonShine\Laravel\Fields\Relationships\BelongsTo;
+use MoonShine\Laravel\Fields\Relationships\BelongsToMany;
+use MoonShine\Laravel\Fields\Slug;
+use MoonShine\Laravel\Models\MoonshineUserRole;
+use MoonShine\Laravel\Resources\ModelResource;
+use MoonShine\Support\Enums\ClickAction;
+use MoonShine\Support\ListOf;
+use MoonShine\UI\Components\ActionButton;
+use MoonShine\UI\Components\Layout\Box;
+use MoonShine\UI\Components\Layout\Column;
+use MoonShine\UI\Components\Layout\Grid;
+use MoonShine\UI\Fields\DateRange;
+use MoonShine\UI\Fields\ID;
+use MoonShine\UI\Fields\Image;
+use MoonShine\UI\Fields\StackFields;
+use MoonShine\UI\Fields\Switcher;
+use MoonShine\UI\Fields\Text;
+use MoonShine\UI\Fields\Textarea;
 
 class ArticleResource extends ModelResource
 {
@@ -42,14 +41,39 @@ class ArticleResource extends ModelResource
         'categories'
     ];
 
-    public function fields(): array
+    public function indexFields(): array
+    {
+        return [
+            ID::make()->sortable(),
+            BelongsTo::make('Author', resource: MoonShineUserResource::class)
+                ->badge()
+                ->asyncSearch()
+                ->withImage('avatar', 'public', 'moonshine_users')
+            ,
+            StackFields::make('Title')->fields([
+                Text::make('Title')->required(),
+                Slug::make('Slug')
+                    ->from('title')
+                    ->separator('-'),
+            ]),
+            Image::make('Thumbnail')
+                ->disk('public')
+                ->dir('articles'),
+
+            Switcher::make('Is published')
+                ->updateOnPreview(),
+        ];
+    }
+
+
+    public function formFields(): iterable
     {
         return [
             Grid::make([
                 Column::make([
-                    Block::make('Main information', [
+                    Box::make('Main information', [
                         ID::make()->sortable(),
-                        BelongsTo::make('Author', resource: new MoonShineUserResource())
+                        BelongsTo::make('Author', resource: MoonShineUserResource::class)
                             ->badge()
                             ->asyncSearch()
                             ->withImage('avatar', 'public', 'moonshine_users')
@@ -62,7 +86,7 @@ class ArticleResource extends ModelResource
                                 ->separator('-'),
                         ]),
 
-                        TinyMce::make('Description')->required()->hideOnIndex(),
+                        Textarea::make('Description')->required(),
 
                         Image::make('Thumbnail')
                             ->disk('public')
@@ -73,9 +97,8 @@ class ArticleResource extends ModelResource
                     ]),
                 ])->columnSpan(8),
                 Column::make([
-                    Block::make('Categories', [
+                    Box::make('Categories', [
                         BelongsToMany::make('Categories')
-                            ->hideOnIndex()
                             ->tree('category_id')
                     ]),
                 ])->columnSpan(4)
@@ -83,16 +106,23 @@ class ArticleResource extends ModelResource
         ];
     }
 
-    public function query(): Builder
+    public function detailFields(): iterable
     {
-        if(auth()->user()->moonshine_user_role_id === MoonshineUserRole::DEFAULT_ROLE_ID) {
-            return parent::query();
-        }
-
-        return parent::query()->where('author_id', auth()->id());
+        return [
+            ...$this->indexFields(),
+        ];
     }
 
-    public function rules(Model $item): array
+    public function getQuery(): Builder
+    {
+        if(auth()->user()->moonshine_user_role_id === MoonshineUserRole::DEFAULT_ROLE_ID) {
+            return parent::getQuery();
+        }
+
+        return parent::getQuery()->where('author_id', auth()->id());
+    }
+
+    public function rules(mixed $item): array
     {
         return [
             'title' => ['required'],
@@ -100,12 +130,13 @@ class ArticleResource extends ModelResource
         ];
     }
 
-    public function buttons(): array
+    public function indexButtons(): ListOf
     {
-        return [
+        return new ListOf(ActionButtonContract::class, [
             ActionButton::make('Go to article', fn(Article $data) => route('articles.index', $data->slug))
-                ->primary()
-        ];
+                ->primary(),
+            ...parent::indexButtons()->toArray(),
+        ]);
     }
 
     public function filters(): array

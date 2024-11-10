@@ -6,88 +6,37 @@ namespace App\Providers;
 
 use App\MoonShine\Resources\ArticleResource;
 use App\MoonShine\Resources\CategoryResource;
+use App\MoonShine\Resources\UserResource;
+use Illuminate\Support\ServiceProvider;
+use MoonShine\Contracts\Core\DependencyInjection\ConfiguratorContract;
+use MoonShine\Contracts\Core\DependencyInjection\CoreContract;
+use MoonShine\Laravel\DependencyInjection\MoonShine;
+use MoonShine\Laravel\DependencyInjection\MoonShineConfigurator;
 use App\MoonShine\Resources\MoonShineUserResource;
 use App\MoonShine\Resources\MoonShineUserRoleResource;
-use App\MoonShine\Resources\UserResource;
-use Closure;
-use Illuminate\Support\Facades\Vite;
-use MoonShine\Menu\MenuGroup;
-use MoonShine\Menu\MenuItem;
-use MoonShine\MoonShineRequest;
-use MoonShine\Providers\MoonShineApplicationServiceProvider;
 
-class MoonShineServiceProvider extends MoonShineApplicationServiceProvider
+class MoonShineServiceProvider extends ServiceProvider
 {
-    public function boot(): void
+    /**
+     * @param  MoonShine  $core
+     * @param  MoonShineConfigurator  $config
+     *
+     */
+    public function boot(CoreContract $core, ConfiguratorContract $config): void
     {
-        parent::boot();
+        // $config->authEnable();
 
-        moonshineAssets()->add([
-            Vite::asset('resources/css/app.css'),
-            Vite::asset('resources/js/app.js'),
-        ]);
-    }
-
-    protected function resources(): array
-    {
-        return [
-            new MoonShineUserResource(),
-            new MoonShineUserRoleResource(),
-            new CategoryResource(),
-            new ArticleResource(),
-            new UserResource(),
-        ];
-    }
-
-    protected function menu(): Closure
-    {
-        return static function (MoonShineRequest $request) {
-            if(!$request->isMoonShineRequest()) {
-                return [
-                    MenuItem::make('Статьи', static fn () => route('articles.index')),
-                ];
-            }
-
-            return [
-                MenuGroup::make(static fn () => __('moonshine::ui.resource.system'), [
-                    MenuItem::make(
-                        static fn () => __('moonshine::ui.resource.admins_title'),
-                        new MoonShineUserResource()
-                    ),
-                    MenuItem::make(
-                        static fn () => __('moonshine::ui.resource.role_title'),
-                        new MoonShineUserRoleResource()
-                    ),
-                ]),
-
-                MenuGroup::make('Статьи', [
-                    MenuItem::make(
-                        'Категории',
-                        new CategoryResource()
-                    ),
-                    MenuItem::make(
-                        'Статьи',
-                        new ArticleResource()
-                    ),
-                ]),
-
-                MenuItem::make('Пользователи', new UserResource())
-                    ->icon('heroicons.outline.users'),
-
-                MenuItem::make('Сайт', static fn () => route('home')),
-            ];
-        };
-    }
-
-    protected function theme(): Closure
-    {
-        return static function (MoonShineRequest $request) {
-            return ! $request->isMoonShineRequest() ? [
-                'colors' => [
-                    'primary' => '#1D8A99',
-                    'secondary' => '#1E96FC',
-                ],
-            ] : [];
-        };
+        $core
+            ->resources([
+                MoonShineUserResource::class,
+                MoonShineUserRoleResource::class,
+                UserResource::class,
+                CategoryResource::class,
+                ArticleResource::class,
+            ])
+            ->pages([
+                ...$config->getPages(),
+            ])
+        ;
     }
 }

@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-    <x-moonshine::grid>
-        <x-moonshine::column>
+    <x-moonshine::layout.grid>
+        <x-moonshine::layout.column>
             <img
                 src="{{ $article->makeImage('1000x300') }}"
                 class="my-4 w-full"
@@ -19,7 +19,7 @@
                 @endauth
             </div>
 
-            <x-moonshine::divider />
+            <x-moonshine::layout.divider />
 
             <div class="prose prose-2xl">
                 {!! $article->description !!}
@@ -28,6 +28,6 @@
             @auth
                 <livewire:comments :article="$article" />
             @endauth
-        </x-moonshine::column>
-    </x-moonshine::grid>
+        </x-moonshine::layout.column>
+    </x-moonshine::layout.grid>
 @endsection

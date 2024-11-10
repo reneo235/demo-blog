@@ -6,8 +6,9 @@ use App\Models\Article;
 use App\Models\Category;
 use App\Models\User;
 use Illuminate\Database\Seeder;
-use MoonShine\Models\MoonshineUser;
-use MoonShine\Models\MoonshineUserRole;
+use MoonShine\Laravel\Models\MoonshineUserRole;
+use MoonShine\Permissions\Models\MoonshineUser;
+
 
 class DatabaseSeeder extends Seeder
 {

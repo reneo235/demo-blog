@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace App\MoonShine\Pages;
 
 use Leeto\MoonShineTree\View\Components\TreeComponent;
-use MoonShine\Pages\Crud\IndexPage;
+use MoonShine\Laravel\Pages\Crud\IndexPage;
 
 class CategoryTreePage extends IndexPage
 {
     protected function mainLayer(): array
     {
         return [
-            ...$this->actionButtons(),
+            ...$this->getPageButtons(),
             TreeComponent::make($this->getResource()),
         ];
     }

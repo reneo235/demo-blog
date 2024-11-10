@@ -48,7 +48,7 @@ class ArticleController extends Controller
         return view('articles.index', [
             'category' => $category,
             'articles' => $articles,
-            'categories' => $categories
+            'categories' => $categories,
         ]);
     }
 

@@ -6,8 +6,9 @@ namespace App\Policies;
 
 use Illuminate\Auth\Access\HandlesAuthorization;
 use App\Models\Article;
-use MoonShine\Models\MoonshineUser;
-use MoonShine\Models\MoonshineUserRole;
+use MoonShine\Laravel\Models\MoonshineUserRole;
+use MoonShine\Permissions\Models\MoonshineUser;
+
 
 class ArticlePolicy
 {

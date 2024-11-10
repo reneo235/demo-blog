@@ -8,14 +8,15 @@ use App\Models\Category;
 use App\MoonShine\Pages\CategoryTreePage;
 use Illuminate\Database\Eloquent\Model;
 use Leeto\MoonShineTree\Resources\TreeResource;
-use MoonShine\Decorations\Block;
-use MoonShine\Fields\ID;
-use MoonShine\Fields\Number;
-use MoonShine\Fields\Relationships\BelongsTo;
-use MoonShine\Fields\Slug;
-use MoonShine\Fields\Text;
-use MoonShine\Pages\Crud\DetailPage;
-use MoonShine\Pages\Crud\FormPage;
+use MoonShine\Laravel\Fields\Relationships\BelongsTo;
+use MoonShine\Laravel\Fields\Slug;
+use MoonShine\Laravel\Pages\Crud\DetailPage;
+use MoonShine\Laravel\Pages\Crud\FormPage;
+use MoonShine\UI\Components\Layout\Box;
+use MoonShine\UI\Fields\ID;
+use MoonShine\UI\Fields\Number;
+use MoonShine\UI\Fields\Text;
+
 
 class CategoryResource extends TreeResource
 {
@@ -33,12 +34,33 @@ class CategoryResource extends TreeResource
         'category',
     ];
 
-    public function fields(): array
+    public function indexFields(): array
     {
         return [
-            Block::make([
+            ID::make()->sortable(),
+            BelongsTo::make('Parent', 'category', resource: CategoryResource::class)
+                ->nullable()
+                ->badge(),
+
+            Text::make('Title')
+                ->updateOnPreview(),
+
+            Slug::make('Slug')
+                ->from('title')
+                ->separator('-'),
+
+            Number::make('Sorting')
+                ->buttons()
+                ->default(0),
+        ];
+    }
+
+    public function formFields(): array
+    {
+        return [
+            Box::make([
                 ID::make()->sortable(),
-                BelongsTo::make('Parent', 'category', resource: new CategoryResource())
+                BelongsTo::make('Parent', 'category', resource: CategoryResource::class)
                     ->nullable()
                     ->badge(),
 
@@ -57,20 +79,23 @@ class CategoryResource extends TreeResource
         ];
     }
 
-    protected function pages(): array
+    public function detailFields(): array
     {
         return [
-            CategoryTreePage::make($this->title()),
-            FormPage::make(
-                $this->getItemID()
-                    ? __('moonshine::ui.edit')
-                    : __('moonshine::ui.add')
-            ),
-            DetailPage::make(__('moonshine::ui.show')),
+            ...$this->indexFields(),
         ];
     }
 
-    public function rules(Model $item): array
+    protected function pages(): array
+    {
+        return [
+            CategoryTreePage::class,
+            FormPage::class,
+            DetailPage::class,
+        ];
+    }
+
+    public function rules(mixed $item): array
     {
         return [
             'title' => ['required']
@@ -84,6 +109,6 @@ class CategoryResource extends TreeResource
 
     public function sortKey(): string
     {
-        return $this->sortColumn();
+        return $this->getSortColumn();
     }
 }
