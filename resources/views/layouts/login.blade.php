@@ -9,6 +9,8 @@
 
     <title>{{ config('app.name') }}</title>
 
+{{--// TODO login.layout--}}
+
     @moonShineAssets
 </head>
 <x-moonshine::layout>

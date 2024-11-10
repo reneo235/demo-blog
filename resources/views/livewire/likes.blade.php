@@ -26,6 +26,6 @@ $like = function () {
 ?>
 
 <a wire:click="like" class="flex gap-4 items-center justify-between">
-    <x-moonshine::icon :icon="$liked ? 'heroicons.heart' : 'heroicons.outline.heart'" size="10" />
+    <x-moonshine::icon :icon="$liked ? 'heart' : 'heart'" size="10" />
     <span class="font-bold">{{ $count }}</span>
 </a>

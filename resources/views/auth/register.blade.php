@@ -1,6 +1,7 @@
 @extends('layouts.login')
 
 @section('content')
+    {{--// TODO register--}}
     <div class="authentication">
         <div class="authentication-logo">
             <a href="/" rel="home">
