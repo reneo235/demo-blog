@@ -58,3 +58,11 @@ npm-build:
 	docker-compose run --rm --service-ports $(app-npm) run build $(c)
 npm-host:
 	docker-compose run --rm --service-ports $(app-npm) run dev --host $(c)
+
+#for contributors
+update: git-upstream publish
+
+git-upstream:
+	git fetch upstream && git merge upstream/3.x
+publish:
+	docker exec $(app) php $(path)/artisan vendor:publish --tag=laravel-assets --force $(c)
