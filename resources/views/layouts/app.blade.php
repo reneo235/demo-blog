@@ -30,9 +30,11 @@
 
             </x-moonshine::layout.top-bar>
             <x-moonshine::layout.wrapper>
-                <x-moonshine::layout.content>
-                    @yield('content')
-                </x-moonshine::layout.content>
+                <x-moonshine::layout.div class="layout-page">
+                    <x-moonshine::layout.content>
+                        @yield('content')
+                    </x-moonshine::layout.content>
+                </x-moonshine::layout.div>
             </x-moonshine::layout.wrapper>
         </x-moonshine::layout.body>
     </x-moonshine::layout.html>

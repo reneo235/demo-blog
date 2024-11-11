@@ -25,5 +25,6 @@
     </x-moonshine::layout.grid>
 
     <x-moonshine::layout.line-break />
-    {{ $articles->links() }}
+
+    <x-moonshine::paginator :paginator="$articles" />
 @endsection
