@@ -1,21 +1,33 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}"
-      x-data
-      :class="$store.darkMode.on && 'dark'"
->
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <title>{{ config('app.name') }}</title>
-
-{{--// TODO login.layout--}}
-
-    @moonShineAssets
-</head>
 <x-moonshine::layout>
-    <x-moonshine::layout.flash />
+    <x-moonshine::layout.html :with-alpine-js="true" :with-themes="false">
+        <x-moonshine::layout.head>
+            <x-moonshine::layout.meta name="csrf-token" :content="csrf_token()"/>
+            <x-moonshine::layout.favicon />
+            <x-moonshine::layout.assets>
+                @vite([
+                    'resources/css/main.css',
+                    'resources/js/app.js',
+                ], 'vendor/moonshine')
+                @vite([
+                    'resources/css/app.css',
+                ])
+            </x-moonshine::layout.assets>
+        </x-moonshine::layout.head>
+        <x-moonshine::layout.body>
+            <x-moonshine::layout.div class="authentication">
+                <x-moonshine::layout.div class="authentication-logo">
+                    <x-moonshine::layout.logo href="/" logo="{{ asset('logo.svg') }}" />
+                </x-moonshine::layout.div>
 
-    <x-moonshine::layout.content />
+                <x-moonshine::layout.div class="authentication-content">
+                    <x-moonshine::layout.content>
+                        <x-moonshine::layout.flash />
+                        @yield('content')
+                    </x-moonshine::layout.content>
+                </x-moonshine::layout.div>
+
+            </x-moonshine::layout.div>
+        </x-moonshine::layout.body>
+    </x-moonshine::layout.html>
 </x-moonshine::layout>
-</html>
+

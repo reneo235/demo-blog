@@ -2605,12 +2605,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/moonshine-software/moonshine.git",
-                "reference": "5a0f5e30b53273dc586d2e28a954713b224adb5c"
+                "reference": "b0b8776ff627960794abf9858ae49e1b2622bd13"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/moonshine-software/moonshine/zipball/5a0f5e30b53273dc586d2e28a954713b224adb5c",
-                "reference": "5a0f5e30b53273dc586d2e28a954713b224adb5c",
+                "url": "https://api.github.com/repos/moonshine-software/moonshine/zipball/b0b8776ff627960794abf9858ae49e1b2622bd13",
+                "reference": "b0b8776ff627960794abf9858ae49e1b2622bd13",
                 "shasum": ""
             },
             "require": {
@@ -2690,6 +2690,9 @@
                 "test": [
                     "vendor/bin/pest"
                 ],
+                "test:bail": [
+                    "vendor/bin/pest --bail"
+                ],
                 "test:fresh": [
                     "rm -rf vendor/orchestra",
                     "composer install",
@@ -2731,7 +2734,7 @@
                     "url": "https://opencollective.com/moonshine"
                 }
             ],
-            "time": "2024-11-09T13:33:43+00:00"
+            "time": "2024-11-10T14:08:28+00:00"
         },
         {
             "name": "moonshine/permissions",
@@ -6768,16 +6771,16 @@
     "packages-dev": [
         {
             "name": "fakerphp/faker",
-            "version": "v1.23.1",
+            "version": "v1.24.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FakerPHP/Faker.git",
-                "reference": "bfb4fe148adbf78eff521199619b93a52ae3554b"
+                "reference": "a136842a532bac9ecd8a1c723852b09915d7db50"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FakerPHP/Faker/zipball/bfb4fe148adbf78eff521199619b93a52ae3554b",
-                "reference": "bfb4fe148adbf78eff521199619b93a52ae3554b",
+                "url": "https://api.github.com/repos/FakerPHP/Faker/zipball/a136842a532bac9ecd8a1c723852b09915d7db50",
+                "reference": "a136842a532bac9ecd8a1c723852b09915d7db50",
                 "shasum": ""
             },
             "require": {
@@ -6825,9 +6828,9 @@
             ],
             "support": {
                 "issues": "https://github.com/FakerPHP/Faker/issues",
-                "source": "https://github.com/FakerPHP/Faker/tree/v1.23.1"
+                "source": "https://github.com/FakerPHP/Faker/tree/v1.24.0"
             },
-            "time": "2024-01-02T13:46:09+00:00"
+            "time": "2024-11-07T15:11:20+00:00"
         },
         {
             "name": "filp/whoops",
@@ -8994,5 +8997,5 @@
         "php": "^8.2"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }

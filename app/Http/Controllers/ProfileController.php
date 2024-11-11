@@ -2,18 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Article;
-use App\Pages\ProfilePage;
-use Illuminate\Http\Request;
-use MoonShine\Pages\ViewPage;
+use App\MoonShine\Pages\ProfilePage;
 
 class ProfileController extends Controller
 {
-    /**
-     * Handle the incoming request.
-     */
-    public function __invoke(Request $request)
+    public function __invoke(ProfilePage $page): ProfilePage
     {
-        return ProfilePage::make();
+        return $page->loaded();
     }
 }

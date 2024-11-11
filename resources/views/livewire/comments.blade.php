@@ -7,7 +7,7 @@
         <x-moonshine::form.button type="submit">
             {{ $form->commentId ? 'Ответить' : 'Написать' }}
         </x-moonshine::form.button>
-        
+
         @if($form->commentId)
             <x-moonshine::link-button wire:click="answer">
                 X

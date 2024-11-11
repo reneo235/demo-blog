@@ -24,5 +24,6 @@
         @endforeach
     </x-moonshine::layout.grid>
 
-    {{ $articles->links('moonshine::ui.pagination', ['async' => false]) }}
+    <x-moonshine::layout.line-break />
+    {{ $articles->links() }}
 @endsection
