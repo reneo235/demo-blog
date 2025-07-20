@@ -37,6 +37,7 @@ DB_PASSWORD=12345
 - Add .env and configure
 - php artisan key:generate
 - php artisan storage:link
+- php artisan sessions:table ( or change SESSION_DRIVER=file )
 - php artisan migrate --seed
 - Go to /admin
 - Optionally, you can configure github or tinymce file manager
