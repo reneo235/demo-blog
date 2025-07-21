@@ -26,5 +26,5 @@
 
     <x-moonshine::layout.line-break />
 
-    <x-moonshine-laravel::paginator :paginator="$articles" />
+    {{ $articles->links() }}
 @endsection
