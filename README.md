@@ -37,6 +37,10 @@ DB_PASSWORD=12345
 - Add .env and configure
 - php artisan key:generate
 - php artisan storage:link
+- php artisan session:table ( or change SESSION_DRIVER from 'database' to 'file' )
 - php artisan migrate --seed
+- npm install && npm run build
 - Go to /admin
 - Optionally, you can configure github or tinymce file manager
+
+**Admin**<br>user: admin@moonshine-laravel.com<br>pass: moonshine
